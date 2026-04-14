@@ -123,7 +123,7 @@ class Database {
     this.mongoClient = new MongoClient(config.MONGODB_URI);
     await this.mongoClient.connect();
 
-    const databaseName = config.MONGODB_DATABASE || 'instagram_bot';
+    const databaseName = config.MONGODB_DATABASE;
     this.mongoCollection = this.mongoClient.db(databaseName).collection('bot_state');
 
     const state = await this.mongoCollection.findOne({ _id: 'data' });

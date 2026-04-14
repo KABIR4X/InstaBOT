@@ -95,7 +95,7 @@ class InstagramBot {
     } else {
       throw new Error(
         'No valid cookies in account.txt and no email/password configured. ' +
-        'Please add Instagram cookies or fill in facebookAccount.email/password in config/default.json.'
+        'Please add Instagram cookies or fill in instagramAccount.email/password in config/default.json.'
       );
     }
 
@@ -153,6 +153,7 @@ class InstagramBot {
 
     this.eventLoader.handleEvent('ready', {}).then(() => {
       this.startListening();
+      this._startReminderScheduler();
     });
   }
 
@@ -505,6 +506,32 @@ class InstagramBot {
 
   // ── Scheduled features ────────────────────────────────────────────────
 
+  /** Fire due reminders every 30 seconds */
+  _startReminderScheduler() {
+    if (this._reminderTimer) clearInterval(this._reminderTimer);
+    this._reminderTimer = setInterval(async () => {
+      try {
+        const database = require('../utils/database');
+        const due = database.getDueReminders();
+        for (const reminder of due) {
+          database.removeReminder(reminder.id);
+          try {
+            await this.api.sendMessageToUser(
+              `⏰ Reminder!\n\n"${reminder.message}"`,
+              reminder.userId
+            );
+          } catch (err) {
+            logger.warn('Could not deliver reminder', { userId: reminder.userId, error: err.message });
+          }
+        }
+        if (due.length > 0) database.save();
+      } catch (err) {
+        logger.error('Reminder scheduler error', { error: err.message });
+      }
+    }, 30000);
+    logger.info('Reminder scheduler started (checks every 30s)');
+  }
+
   /** Auto-restart: supports ms interval or cron expression */
   _scheduleAutoRestart() {
     const time = config.AUTO_RESTART_TIME;
@@ -609,6 +636,7 @@ class InstagramBot {
       this.shouldReconnect = false;
       if (this._mqttRestartTimer)  clearInterval(this._mqttRestartTimer);
       if (this._cookieRefreshTimer) clearInterval(this._cookieRefreshTimer);
+      if (this._reminderTimer)      clearInterval(this._reminderTimer);
       try { stopListening(); } catch (_) {}
       logger.info('Bot shutdown complete');
       process.exit(0);

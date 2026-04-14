@@ -17,13 +17,13 @@ try {
 
 module.exports = {
   // ── Account ──────────────────────────────────────────────────────────
-  ACCOUNT_EMAIL:    process.env.ACCOUNT_EMAIL    || c.facebookAccount?.email    || '',
-  ACCOUNT_PASSWORD: process.env.ACCOUNT_PASSWORD || c.facebookAccount?.password || '',
-  ACCOUNT_2FA_SECRET: c.facebookAccount?.['2FASecret'] || '',
-  ACCOUNT_I_USER:   c.facebookAccount?.i_user || '',
-  ACCOUNT_PROXY:    c.facebookAccount?.proxy   || null,
-  ACCOUNT_USER_AGENT: c.facebookAccount?.userAgent || '',
-  INTERVAL_GET_NEW_COOKIE: c.facebookAccount?.intervalGetNewCookie ?? 1440,
+  ACCOUNT_EMAIL:    process.env.ACCOUNT_EMAIL    || c.instagramAccount?.email    || '',
+  ACCOUNT_PASSWORD: process.env.ACCOUNT_PASSWORD || c.instagramAccount?.password || '',
+  ACCOUNT_2FA_SECRET: c.instagramAccount?.['2FASecret'] || '',
+  ACCOUNT_I_USER:   c.instagramAccount?.i_user || '',
+  ACCOUNT_PROXY:    c.instagramAccount?.proxy   || null,
+  ACCOUNT_USER_AGENT: c.instagramAccount?.userAgent || '',
+  INTERVAL_GET_NEW_COOKIE: c.instagramAccount?.intervalGetNewCookie ?? 1440,
 
   // ── General ───────────────────────────────────────────────────────────
   ANTI_INBOX:   c.antiInbox   ?? false,
@@ -53,9 +53,12 @@ module.exports = {
   // ── Database ──────────────────────────────────────────────────────────
   DATABASE_TYPE:                 process.env.DATABASE_TYPE || c.database?.type || 'sqlite',
   MONGODB_URI:                   process.env.MONGODB_URI   || c.database?.uriMongodb || '',
+  MONGODB_DATABASE:              process.env.MONGODB_DATABASE || c.database?.mongodbDatabase || 'instagram_bot',
   DB_AUTO_SYNC_WHEN_START:       c.database?.autoSyncWhenStart ?? false,
   DB_AUTO_REFRESH_THREAD_FIRST:  c.database?.autoRefreshThreadInfoFirstTime ?? true,
   DATABASE_PATH:                 process.env.DATABASE_PATH || './storage/data/bot.sqlite',
+  DATABASE_AUTO_SAVE:            c.database?.autoSave ?? true,
+  DATABASE_SAVE_INTERVAL:        (c.database?.saveIntervalMinutes ?? 1) * 60 * 1000,
 
   // ── Timezone ──────────────────────────────────────────────────────────
   TIMEZONE: process.env.TZ || c.timeZone || 'UTC',
@@ -157,6 +160,9 @@ module.exports = {
   LOG_LEVEL:              process.env.LOG_LEVEL || 'debug',
   ENABLE_FILE_LOGGING:    true,
   ENABLE_CONSOLE_LOGGING: true,
+
+  // ── Message queue ─────────────────────────────────────────────────────
+  MESSAGE_DELAY_MS: c.messageDelayMs ?? 500,
 
   // ── Legacy / kept for compatibility ──────────────────────────────────
   AUTO_RECONNECT:         true,

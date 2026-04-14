@@ -47,10 +47,14 @@
   "database": {
     "type": "sqlite",
     "uriMongodb": "",
+    "mongodbDatabase": "instagram_bot",
+    "autoSave": true,
+    "saveIntervalMinutes": 1,
     "autoSyncWhenStart": false,
     "autoRefreshThreadInfoFirstTime": true,
-    "notes": "(1) type selects 'json' or 'sqlite' or 'mongodb'. If you choose mongodb, enter uri connect mongodb in the uriMongodb section. (2) when you set autoSyncWhenStart to true, the bot will automatically synchronize the data in the database when starting the bot. (3) when you set autoRefreshThreadInfoFirstTime to true, the bot will automatically refresh the thread information when get first message from the thread since starting the bot"
+    "notes": "(1) type selects 'sqlite' or 'mongodb'. To use MongoDB, paste your connection URI into uriMongodb and set mongodbDatabase to your preferred DB name. (2) autoSave periodically flushes in-memory state to disk/MongoDB every saveIntervalMinutes minutes. (3) autoSyncWhenStart re-syncs data on startup. (4) autoRefreshThreadInfoFirstTime refreshes thread info on first message."
   },
+  "messageDelayMs": 500,
   "timeZone": "Asia/Dhaka",
   "dashBoard": {
     "enable": true,
