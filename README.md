@@ -1,50 +1,10 @@
-<div align="center">
+# NeoKEX Instagram Bot
 
-```
-███╗   ██╗███████╗ ██████╗ ██╗  ██╗███████╗██╗  ██╗
-████╗  ██║██╔════╝██╔═══██╗██║ ██╔╝██╔════╝╚██╗██╔╝
-██╔██╗ ██║█████╗  ██║   ██║█████╔╝ █████╗   ╚███╔╝
-██║╚██╗██║██╔══╝  ██║   ██║██╔═██╗ ██╔══╝   ██╔██╗
-██║ ╚████║███████╗╚██████╔╝██║  ██╗███████╗██╔╝ ██╗
-╚═╝  ╚═══╝╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
-
-          ██╗██████╗  ██████╗ ████████╗    ██╗   ██╗ ██╗
-          ██║██╔══██╗██╔═══██╗╚══██╔══╝    ██║   ██║███║
-          ██║██████╔╝██║   ██║   ██║       ██║   ██║╚██║
-          ██║██╔══██╗██║   ██║   ██║       ╚██╗ ██╔╝ ██║
-          ██║██████╔╝╚██████╔╝   ██║        ╚████╔╝  ██║
-          ╚═╝╚═════╝  ╚═════╝    ╚═╝         ╚═══╝   ╚═╝
-```
-
-![Version](https://img.shields.io/badge/version-1.0.0-blueviolet?style=for-the-badge)
-![Platform](https://img.shields.io/badge/platform-Instagram-E1306C?style=for-the-badge&logo=instagram)
-![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen?style=for-the-badge&logo=node.js)
-![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
-![Commands](https://img.shields.io/badge/commands-33-orange?style=for-the-badge)
-![Events](https://img.shields.io/badge/events-6-yellow?style=for-the-badge)
-
-**A highly advanced Instagram chatbot built on `@neoaz07/nkxica` — modular, role-based, and production-ready.**
-
-</div>
+A modular, role-based Instagram chatbot built on `@neoaz07/nkxica` — production-ready with a dynamic command/event system.
 
 ---
 
-## ✨ Highlights
-
-- **MQTT-based** real-time message listening via Instagram's private API
-- **33 commands** across 7 categories with aliases and cooldowns
-- **4-tier role system** — user → bot admin → premium → developer
-- **Auto-reply** — every bot response threads back to the triggering message
-- **Reaction feedback** — visual ⏳ / ✅ / ❌ / ✨ reactions instead of status spam
-- **Meta AI integration** — multi-turn conversations with image support
-- **Economy system** — persistent coin balances with daily rewards
-- **Spam protection** — auto-ban threads that exceed command thresholds
-- **SQLite / MongoDB** database with auto-save
-- **Dynamic command loader** — load, unload, reload commands at runtime
-
----
-
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install dependencies
 ```bash
@@ -62,12 +22,21 @@ Edit `config/default.json` — set your admin IDs, prefix, timezone, etc.
 ```jsonc
 {
   "prefix": "~",
-  "noPrefix": true,          // admins & devs skip the prefix
+  "noPrefix": true,
   "adminBot": ["YOUR_USER_ID"],
   "devUsers": ["YOUR_USER_ID"],
   "nickNameBot": "InstaBOT"
 }
 ```
+
+You can also use environment variables for sensitive values:
+
+| Env Var | Description |
+|---------|-------------|
+| `ACCOUNT_EMAIL` | Instagram account email |
+| `ACCOUNT_PASSWORD` | Instagram account password |
+| `MONGODB_URI` | MongoDB connection string |
+| `PREFIX` | Command prefix override |
 
 ### 4. Run
 ```bash
@@ -76,7 +45,7 @@ node index.js
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
@@ -87,10 +56,13 @@ node index.js
 │   └── index.js              ← Config loader (merges env vars + JSON)
 ├── bot/
 │   └── InstagramBot.js       ← Core bot engine (login, api wrapper, loaders)
-├── commands/                 ← Command modules (33 files)
-├── events/                   ← Event handlers (6 files)
+├── commands/                 ← Command modules (auto-loaded at startup)
+├── events/                   ← Event handlers (auto-loaded at startup)
 ├── utils/
-│   ├── banner.js             ← Startup banner & logging helpers
+│   ├── banner.js             ← Startup banner
+│   ├── commandLoader.js      ← Dynamic command loading/reloading
+│   ├── eventLoader.js        ← Dynamic event loading/reloading
+│   ├── database.js           ← SQLite / MongoDB abstraction
 │   ├── logger.js             ← Winston logger
 │   └── permissions.js        ← Role resolution logic
 └── storage/
@@ -100,7 +72,7 @@ node index.js
 
 ---
 
-## 🔐 Role System
+## Role System
 
 | Role | Name | Who |
 |------|------|-----|
@@ -109,198 +81,241 @@ node index.js
 | `3` | Premium User | IDs in `premiumUsers` config |
 | `4` | Developer | IDs in `devUsers` config — full access |
 
-> Developers bypass all role checks up to level 3. Bot Admins cannot access role-4 commands.
+Developers bypass all role checks up to level 3. Bot Admins cannot access role-4 commands.
 
 ---
 
-## 📜 Commands
+## Creating a Command
 
-### 🤖 AI
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `ai` | `gpt`, `ask`, `chatgpt` | 0 | 10s | Ask AI anything (OpenAI) |
-| `metaai` | `meta`, `llama` | 0 | — | Multi-turn Meta AI chat with image support. `metaai clear` resets history |
+Create a new `.js` file inside the `commands/` directory. The filename does not matter — the command is identified by its `name` property. It will be auto-loaded on the next bot start, or you can reload it at runtime using the `cmd` admin command.
 
-### 🎮 Fun
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `8ball` | `magic8ball`, `eightball`, `fortune` | 0 | 3s | Ask the magic 8-ball a yes/no question |
-| `anisearch` | `anime`, `animeedit` | 0 | 10s | Search and send an anime edit video |
-| `choose` | `pick`, `select`, `random` | 0 | 3s | Randomly choose between options separated by `\|` |
-| `joke` | `j`, `funny`, `laugh` | 0 | 5s | Get a random joke |
-| `quote` | `q`, `inspiration`, `motivate` | 0 | 5s | Get a random inspirational quote |
-| `rps` | `rockpaperscissors`, `rock` | 0 | 3s | Play Rock Paper Scissors with the bot |
-
-### 🎲 Games
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `coinflip` | `flip`, `coin`, `toss` | 0 | 2s | Flip a coin — Heads or Tails |
-| `dice` | `roll`, `d6`, `rolldice` | 0 | 2s | Roll a dice (default 6-sided, or custom) |
-
-### 🛠️ Utility
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `calc` | `calculate`, `math` | 0 | 3s | Evaluate a mathematical expression |
-| `echo` | `say`, `repeat` | 0 | 3s | Repeat your message |
-| `remind` | `reminder`, `remindme` | 0 | 5s | Set a reminder (bot DMs you after the delay) |
-| `time` | `clock`, `datetime`, `worldtime` | 0 | 3s | Get current time in any timezone |
-| `uid` | `userid`, `getuid`, `id` | 0 | 5s | Resolve an Instagram username → numeric User ID |
-| `userinfo` | `uinfo`, `profile`, `iginfo` | 0 | 10s | Full Instagram profile info for a username |
-
-### ℹ️ System
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `credits` | `author`, `creator` | 0 | 5s | Show bot credits |
-| `help` | `menu`, `commands`, `h` | 0 | 3s | List all commands or get help for one |
-| `info` | `about`, `botinfo` | 0 | 5s | Show bot info (version, uptime, stats) |
-| `ping` | `p` | 0 | 3s | Check bot response latency |
-| `stats` | `statistics`, `botstats` | 0 | 5s | View bot statistics |
-| `dev` | `developer`, `owner` | 4 | — | Developer panel — system controls |
-| `restart` | `reboot`, `reload` | 4 | — | Restart the bot process |
-
-### 💰 Economy
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `economy` | `bal`, `balance`, `daily`, `pay`, `wallet` | 0 | 3s | Check balance · claim daily · transfer coins |
-
-### 🛡️ Admin
-| Command | Aliases | Role | Cooldown | Description |
-|---------|---------|------|----------|-------------|
-| `admin` | `botadmin`, `admins` | 2 | 5s | Add / remove / list bot admins |
-| `ban` | `unban`, `blacklist` | 2 | 3s | Ban or unban a user from the bot |
-| `cmd` | `command` | 2 | 5s | Load / unload / reload / install command files |
-| `manage` | `autoresponse`, `trigger` | 2 | 5s | Manage auto-response triggers |
-| `prefix` | `setprefix`, `changeprefix` | 2 | 3s | Change the prefix for this thread or globally |
-| `selflisten` | `selfmode`, `listenself` | 2 | 3s | Toggle whether the bot listens to its own messages |
-| `thread` | `gc`, `group` | 2 | 3s | Thread settings — info, ban, unban, prefix |
-| `unsend` | `delete`, `remove`, `del` | 0 | 3s | Unsend a message (reply to the target message) |
-| `whitelist` | `wl` | 2 | 3s | Manage user / thread whitelist |
-
----
-
-## 📡 Events
-
-| Event | Trigger | Description |
-|-------|---------|-------------|
-| `message` | Every incoming message | Main message router — runs prefix/no-prefix detection, spam protection, permission checks, and dispatches to commands |
-| `ready` | Bot connects | Logs successful connection and prints startup info |
-| `bot_added` | Bot is added to a group | Sends an introduction message to the new group |
-| `gc_join` | User joins a group | Sends a welcome message |
-| `gc_leave` | User leaves a group | Sends a farewell message |
-| `error` | Any bot error | Logs and handles runtime errors gracefully |
-
----
-
-## 🔧 Adding a Command
-
-Create a new file in `commands/`:
+### Minimal example
 
 ```javascript
 module.exports = {
   name: 'hello',
-  aliases: ['hi', 'hey'],
   description: 'Say hello back',
-  usage: 'hello [name]',
-  cooldown: 3,
-  role: 0,          // 0=all  2=admin  3=premium  4=dev
-  author: 'YourName',
-  category: 'fun',
 
   async run({ api, event, args, bot }) {
-    const name = args[0] || 'friend';
-    await api.sendMessage(`Hello, ${name}!`, event.threadId);
+    await api.sendMessage(`Hello!`, event.threadID);
   }
 };
 ```
 
-**Available `api` methods:**
-
-| Method | Description |
-|--------|-------------|
-| `sendMessage(text, threadId)` | Send a text message (auto-replies to triggering message) |
-| `sendPhotoFromUrl(url, threadId, caption?)` | Send a photo from a URL |
-| `sendVideoFromUrl(url, threadId, caption?)` | Send a video from a URL |
-| `sendVoiceFromUrl(url, threadId)` | Send a voice note from a URL |
-| `sendReaction(emoji, messageId)` | React to a message |
-| `replyToMessage(threadId, text, messageId)` | Explicit threaded reply |
-| `unsendMessage(threadId, messageId)` | Delete a message |
-| `getUserInfo(userId)` | Fetch Instagram profile info |
-| `getUidFromUsername(username)` | Resolve username → UID |
-
----
-
-## 🎯 Adding an Event
-
-Create a new file in `events/`:
+### Full command template
 
 ```javascript
 module.exports = {
-  name: 'message_reaction',   // must match the MQTT event type
-  description: 'Handle reactions on messages',
+  // Required
+  name: 'hello',               // Primary command name (must be unique)
+  description: 'Say hello',    // Short description shown in help
+
+  // Optional
+  aliases: ['hi', 'hey'],      // Alternative names that trigger this command
+  usage: 'hello [name]',       // Usage hint shown in help
+  cooldown: 3,                 // Cooldown in seconds per user (default: 0)
+  role: 0,                     // Minimum role required: 0=all  2=admin  3=premium  4=dev
+  category: 'fun',             // Category label (used for grouping in help)
+  author: 'YourName',          // Optional author tag
+
+  async run({ api, event, args, bot }) {
+    // args    — array of words after the command name
+    // event   — the raw message event (see Event Object below)
+    // api     — wrapped Instagram API (see API Methods below)
+    // bot     — the InstagramBot instance (access bot.userID, bot.ig, etc.)
+
+    const name = args[0] || 'friend';
+    await api.sendMessage(`Hello, ${name}!`, event.threadID);
+  }
+};
+```
+
+### Event object fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `event.threadID` | string | Thread (group or DM) ID |
+| `event.senderID` | string | Sender's user ID |
+| `event.messageID` | string | Message ID |
+| `event.body` | string | Full message text |
+| `event.args` | string[] | Words split from body after prefix+name |
+| `event.isGroup` | boolean | Whether the message came from a group |
+| `event.attachments` | array | Any attached files/media |
+| `event.timestamp` | number | Unix timestamp in ms |
+| `event.replyToItemId` | string\|null | Message ID being replied to |
+
+### API methods
+
+| Method | Description |
+|--------|-------------|
+| `api.sendMessage(text, threadID)` | Send a plain text message |
+| `api.sendMessageToUser(text, userID)` | Send a direct message to a user |
+| `api.replyToMessage(threadID, text, messageID)` | Send a threaded reply to a specific message |
+| `api.sendReaction(emoji, messageID)` | React to a message with an emoji |
+| `api.sendPhoto(photoPath, threadID)` | Send a local image file |
+| `api.sendVideo(videoPath, threadID)` | Send a local video file |
+| `api.sendAudio(audioPath, threadID)` | Send a local audio/voice file |
+| `api.sendPhotoFromUrl(threadID, url, opts?)` | Send an image from a URL |
+| `api.sendVideoFromUrl(threadID, url, opts?)` | Send a video from a URL |
+| `api.sendVoiceFromUrl(threadID, url, opts?)` | Send a voice note from a URL |
+| `api.unsendMessage(threadID, messageID)` | Delete a sent message |
+| `api.getLastSentMessage(threadID)` | Get the last message the bot sent in a thread |
+| `api.getUserInfo(userID)` | Fetch Instagram profile info by user ID |
+| `api.getUserInfoByUsername(username)` | Fetch Instagram profile info by username |
+| `api.getThread(threadID)` | Fetch thread/group info |
+| `api.getInbox()` | Fetch the bot's inbox |
+| `api.markAsSeen(threadID)` | Mark a thread as read |
+
+### Checking roles inside a command
+
+```javascript
+const { getRole } = require('../utils/permissions');
+
+async run({ api, event, args, bot }) {
+  const role = getRole(event.senderID);
+  // role: 0 = user, 2 = admin, 3 = premium, 4 = dev
+  if (role < 2) {
+    return api.sendMessage('Admins only!', event.threadID);
+  }
+}
+```
+
+### Using the database inside a command
+
+```javascript
+const database = require('../utils/database');
+
+async run({ api, event, args, bot }) {
+  // Economy helpers
+  const balance = database.getBalance(event.senderID);
+  database.addBalance(event.senderID, 100);
+
+  // Generic key-value store
+  database.set(`myKey:${event.senderID}`, { value: 42 });
+  const data = database.get(`myKey:${event.senderID}`);
+
+  // Persist changes to disk / MongoDB
+  database.save();
+}
+```
+
+### Sending reactions as status feedback
+
+A common pattern used across all built-in commands:
+
+```javascript
+async run({ api, event, args, bot }) {
+  // Show "processing" reaction
+  await api.sendReaction('⏳', event.messageID);
+
+  try {
+    // ... do work ...
+    await api.sendMessage('Done!', event.threadID);
+    await api.sendReaction('✅', event.messageID);
+  } catch (err) {
+    await api.sendReaction('❌', event.messageID);
+  }
+}
+```
+
+---
+
+## Creating an Event
+
+Create a new `.js` file inside the `events/` directory. The `name` field must match an Instagram MQTT event type. Events are auto-loaded on startup.
+
+### Event template
+
+```javascript
+module.exports = {
+  name: 'message_reaction',    // Must match the MQTT event type (see list below)
+  description: 'Handle message reactions',
 
   async run({ api, event, bot }) {
-    // event contains: threadId, senderId, messageId, reaction, ...
+    // api   — same wrapped API available in commands
+    // event — raw event payload from the MQTT stream
+    // bot   — the InstagramBot instance
+  }
+};
+```
+
+### Supported event names
+
+| Name | Trigger |
+|------|---------|
+| `message` | Every incoming text/media message |
+| `ready` | Bot successfully connects and is listening |
+| `bot_added` | Bot is added to a group chat |
+| `gc_join` | A user joins a group chat the bot is in |
+| `gc_leave` | A user leaves a group chat the bot is in |
+| `error` | Any unhandled bot error |
+
+> The `message` event is already handled by `events/message.js` (the main router). Create additional events for non-message triggers.
+
+### Example — welcome message when bot is added to a group
+
+```javascript
+module.exports = {
+  name: 'bot_added',
+  description: 'Send intro when bot joins a group',
+
+  async run({ api, event, bot }) {
+    const { threadID } = event;
+    await api.sendMessage(
+      `Hi everyone! I'm ${bot.username}. Type ~help to see what I can do.`,
+      threadID
+    );
+  }
+};
+```
+
+### Example — handle a user leaving a group
+
+```javascript
+module.exports = {
+  name: 'gc_leave',
+  description: 'Farewell message',
+
+  async run({ api, event, bot }) {
+    const { threadID, leftUserId } = event;
+    await api.sendMessage(`User ${leftUserId} has left the chat. Goodbye!`, threadID);
   }
 };
 ```
 
 ---
 
-## ⚙️ Configuration Reference
+## Configuration Reference
 
-Key fields in `config/default.json`:
+All fields live in `config/default.json`. Most can be overridden by environment variables (see Quick Start).
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `prefix` | `~` | Command prefix |
-| `noPrefix` | `true` | Admins & devs can skip the prefix |
-| `adminBot` | `[]` | Array of bot admin user IDs |
-| `premiumUsers` | `[]` | Array of premium user IDs |
-| `devUsers` | `[]` | Array of developer user IDs |
-| `antiInbox` | `false` | Ignore DMs (group-only mode) |
+| `prefix` | `~` | Command prefix character |
+| `noPrefix` | `true` | Admins and devs can skip the prefix |
+| `adminBot` | `[]` | Array of bot admin user IDs (role 2) |
+| `premiumUsers` | `[]` | Array of premium user IDs (role 3) |
+| `devUsers` | `[]` | Array of developer user IDs (role 4) |
+| `antiInbox` | `false` | Ignore direct messages (group-only mode) |
 | `database.type` | `sqlite` | `sqlite` or `mongodb` |
-| `spamProtection.commandThreshold` | `8` | Commands before auto-ban |
+| `database.uriMongodb` | `""` | MongoDB connection string |
+| `database.saveIntervalMinutes` | `1` | How often to auto-save to disk |
+| `spamProtection.commandThreshold` | `8` | Commands per window before auto-ban |
 | `spamProtection.timeWindow` | `10` | Time window in seconds |
-| `typingIndicator.enable` | `true` | Show typing before responses |
+| `spamProtection.banDuration` | `24` | Ban duration in hours |
+| `typingIndicator.enable` | `true` | Show typing indicator before responses |
+| `typingIndicator.duration` | `2000` | Typing indicator duration in ms |
 | `adminOnly.enable` | `false` | Restrict bot to admins only |
+| `restartListenMqtt.enable` | `true` | Periodically restart the MQTT listener |
+| `restartListenMqtt.timeRestart` | `3600000` | Restart interval in ms (default 1 hour) |
+| `autoRestart.time` | `null` | Cron string or interval ms for auto-restart |
+| `autoUptime.enable` | `true` | Ping a URL to keep the process alive |
+| `autoUptime.timeInterval` | `180` | Ping interval in seconds |
+| `timeZone` | `Asia/Dhaka` | Timezone for cron and time commands |
+| `language` | `en` | Bot language (`en`, `vi`) |
 
 ---
 
-## 💎 Credits
-
-<table>
-<tr>
-<td align="center"><b>Role</b></td>
-<td align="center"><b>Name</b></td>
-<td align="center"><b>Contribution</b></td>
-</tr>
-<tr>
-<td>Author & Lead Developer</td>
-<td><b>NeoKEX</b></td>
-<td>Core bot engine, command system, event system, role system, database layer</td>
-</tr>
-<tr>
-<td>Contributor</td>
-<td><b>Vex_kshitiz</b></td>
-<td><code>anisearch</code> command — TikTok anime edit video search</td>
-</tr>
-<tr>
-<td>API</td>
-<td><b>@neoaz07/nkxica</b></td>
-<td>Instagram MQTT client (unofficial private API wrapper)</td>
-</tr>
-</table>
-
-> **DO NOT remove or modify credits.** This project is protected by copyright. Unauthorized redistribution or credit removal may result in legal action.
-
----
-
-## ⚠️ Disclaimer
+## Disclaimer
 
 This bot uses Instagram's **unofficial private API**. Instagram's Terms of Service prohibit automated access. Use at your own risk — the author is not responsible for account bans or restrictions.
-
----
-
-<div align="center">
-Made with ❤️ by <b>NeoKEX</b> &nbsp;·&nbsp; <a href="https://github.com/NeoKEX">github.com/NeoKEX</a>
-</div>
