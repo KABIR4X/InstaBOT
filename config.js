@@ -21,7 +21,7 @@ try {
 module.exports = {
   // Bot Configuration
   PREFIX: process.env.PREFIX || configJSON.bot?.prefix || '!',
-  BOT_NAME: process.env.BOT_NAME || configJSON.bot?.name || 'NeoKEX iBOT V1',
+  BOT_NAME: process.env.BOT_NAME || configJSON.bot?.name || 'InstaBOT',
   BOT_VERSION: configJSON.bot?.version || '1.0.0',
   AUTHOR: configJSON.bot?.author || 'NeoKEX',
   GITHUB: configJSON.bot?.github || 'https://github.com/NeoKEX',

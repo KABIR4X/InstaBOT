@@ -93,12 +93,12 @@ module.exports = {
 
       // Format all commands
       const formatCommands = (cmds) =>
-        cmds.sort().map((cmd) => `  • ${cmd}`).join("\n");
+        cmds.sort().map((cmd) => `│ ∘ ${cmd}`).join("\n");
 
-      let msg = `Commands\n\n`;
-      msg += `Bot: ${config.BOT_NAME}\n`;
-      msg += `Prefix: ${prefix}\n`;
-      msg += `Total: ${uniqueCommands.size} commands\n`;
+      let msg = `╭━ 🎯 𝑪𝑶𝑴𝑴𝑨𝑵𝑫𝑺 ━╮\n`;
+      msg += `│ Bot: ${config.BOT_NAME}\n`;
+      msg += `│ Prefix: ${prefix}\n`;
+      msg += `│ Total: ${uniqueCommands.size} commands\n`;
       
       const sortedCategories = Object.keys(categories).sort();
       for (const cat of sortedCategories) {
@@ -107,7 +107,7 @@ module.exports = {
         msg += `${formatCommands(categories[cat])}\n`;
       }
       
-      msg += `\nUse ${prefix}help [command] for details`;
+      msg += `\n╰➤ Use: ${prefix}help [command] for details`;
 
       return api.sendMessage(msg, event.threadId);
 
