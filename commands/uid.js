@@ -25,38 +25,31 @@ module.exports = {
     }
 
     try {
-      const userInfo = await bot.ig.getUserInfoByUsername(input);
+      const userInfo = await api.getUserInfoByUsername(input);
 
       if (!userInfo) {
         return api.sendMessage(`❌ User @${input} not found!`, event.threadId);
       }
 
       const userId = userInfo.userID || userInfo.userId;
+
+      if (!userId) {
+        return api.sendMessage(`❌ Could not resolve User ID for @${input}.`, event.threadId);
+      }
+
       return api.sendMessage(String(userId), event.threadId);
 
-    } catch (searchError) {
-      try {
-        const searchResults = await bot.ig.searchUsers(input);
-
-        if (!searchResults || searchResults.length === 0) {
-          return api.sendMessage(`❌ User @${input} not found!`, event.threadId);
-        }
-
-        const userId = searchResults[0].userID || searchResults[0].userId;
-        return api.sendMessage(String(userId), event.threadId);
-
-      } catch (error2) {
-        logger.error('Error in uid command', { error: error2.message });
-        return api.sendMessage(
-          `❌ Error fetching User ID for @${input}\n\n` +
-          'This could be due to:\n' +
-          '• User not found\n' +
-          '• Account is private\n' +
-          '• Instagram API rate limit\n' +
-          '• Network error',
-          event.threadId
-        );
-      }
+    } catch (error) {
+      logger.error('Error in uid command', { error: error.message });
+      return api.sendMessage(
+        `❌ Error fetching User ID for @${input}\n\n` +
+        'This could be due to:\n' +
+        '• User not found\n' +
+        '• Account is private\n' +
+        '• Instagram API rate limit\n' +
+        '• Network error',
+        event.threadId
+      );
     }
   }
 };
