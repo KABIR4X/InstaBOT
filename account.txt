@@ -1,1 +1,108 @@
-# Use Netscape Format ( Recommended )
+[{
+	"key": "ig_did",
+	"value": "E96E3CCA-C40C-4914-AD8B-F613545E220F",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "datr",
+	"value": "t92iaSkaXcC2NCvnsIusA7nC",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "mid",
+	"value": "aaLduAABAAHqg6ffO7jRSK4lwv8n",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "ig_nrcb",
+	"value": "1",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "ds_user_id",
+	"value": "48915697982",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "csrftoken",
+	"value": "YXUxvNYpKCkjk7vKGLSt1qPYd8bJYnLV",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "ps_l",
+	"value": "1",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "ps_n",
+	"value": "1",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "wd",
+	"value": "384x689",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "dpr",
+	"value": "1.875",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "sessionid",
+	"value": "48915697982%3A3wti9s4My91j6J%3A7%3AAYjiAKoLzEHrt234Lfz3XLGzpZOQvNqqLRLe_kjN3A",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	},
+	{
+	"key": "rur",
+	"value": ""NCG\05448915697982\0541808212563:01fe85edde42f06b7daf4804360e4b7cd8adc0c2d4428ea4d48aba0c34e39875923fa404"",
+	"path": "/",
+	"hostOnly": false,
+	"domain": ".instagram.com",
+	"creation": "2026-04-20T09:16:16.525Z",
+	"lastAccessed": "2026-04-20T09:16:16.525Z"
+	}]
